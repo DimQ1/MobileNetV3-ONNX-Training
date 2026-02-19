@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.ML.OnnxRuntime;
 using MobileNetV3.Core.Configuration;
@@ -31,7 +33,7 @@ public sealed class ModelExporter
 
         using var session = new InferenceSession(modelPath);
 
-        var inputs  = session.InputMetadata;
+        var inputs = session.InputMetadata;
         var outputs = session.OutputMetadata;
 
         _logger.LogInformation("Верификация модели: {Path}", modelPath);
@@ -46,13 +48,13 @@ public sealed class ModelExporter
                 name, meta.ElementType, string.Join("x", meta.Dimensions));
 
         // Тестовый прогон с нулевым тензором [1, 3, 224, 224]
-        var dummyData  = new float[1 * 3 * _config.ImageSize * _config.ImageSize];
+        var dummyData = new float[1 * 3 * _config.ImageSize * _config.ImageSize];
         var dummyShape = new long[] { 1, 3, _config.ImageSize, _config.ImageSize };
 
         using var dummyTensor = OrtValue.CreateTensorValueFromMemory(dummyData, dummyShape);
 
         var inputDict = new Dictionary<string, OrtValue>
-            { [_config.InputNodeName] = dummyTensor };
+        { [_config.InputNodeName] = dummyTensor };
 
         using var results = session.Run(new RunOptions(), inputDict, session.OutputNames);
 
@@ -64,11 +66,11 @@ public sealed class ModelExporter
 
         return new ModelInfo
         {
-            ModelPath   = modelPath,
-            InputNames  = inputs.Keys.ToList(),
+            ModelPath = modelPath,
+            InputNames = inputs.Keys.ToList(),
             OutputNames = outputs.Keys.ToList(),
-            NumClasses  = outputSpan.Length,
-            FileSizeKb  = new FileInfo(modelPath).Length / 1024
+            NumClasses = outputSpan.Length,
+            FileSizeKb = new FileInfo(modelPath).Length / 1024
         };
     }
 }
@@ -81,4 +83,31 @@ public sealed class ModelInfo
     public IReadOnlyList<string> OutputNames { get; init; } = [];
     public int NumClasses { get; init; }
     public long FileSizeKb { get; init; }
+
+    // ── JSON meta (mobilenet_v3.json) ─────────────────────────────────
+    [JsonPropertyName("class_labels")]
+    public string[] ClassNames { get; init; } = [];
+
+    [JsonPropertyName("input_name")]
+    public string InputName { get; init; } = "input";
+
+    [JsonPropertyName("output_name")]
+    public string OutputName { get; init; } = "output";
+
+    [JsonPropertyName("image_size")]
+    public int ImageSize { get; init; } = 224;
+
+    /// <summary>
+    /// Loads class names and meta from the companion JSON file.
+    /// </summary>
+    public static ModelInfo Load(string jsonPath)
+    {
+        if (!File.Exists(jsonPath))
+            throw new FileNotFoundException("Model metadata not found", jsonPath);
+
+        var json = File.ReadAllText(jsonPath);
+        var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        return JsonSerializer.Deserialize<ModelInfo>(json, opts)
+            ?? throw new InvalidDataException("Failed to parse model metadata.");
+    }
 }

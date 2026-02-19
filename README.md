@@ -70,6 +70,7 @@ python scripts/generate_training_artifacts.py
 ```
 
 Скрипт создаст:
+
 - `models/mobilenet_v3.onnx` — базовая модель (предобученная ImageNet)
 - `artifacts/training_model.onnx` — граф с loss (CrossEntropyLoss)
 - `artifacts/eval_model.onnx` — граф для оценки
@@ -142,6 +143,7 @@ dotnet test src/MobileNetV3.Tests
 ```
 
 ### Аугментация (только train)
+
 - Горизонтальное отражение (p=0.5)
 - Случайная обрезка 90% + rescale (p=0.5)
 - Яркость/контраст ±20% (p=0.5)
@@ -173,19 +175,25 @@ dotnet test src/MobileNetV3.Tests
 Для ускорения обучения измените `ExecutionProvider` в конфиге:
 
 **DirectML (Windows/Xbox, любая GPU):**
+
 ```json
 { "ExecutionProvider": "DirectML", "GpuDeviceId": 0 }
 ```
+
 Дополнительно установите пакет:
+
 ```bash
 dotnet add package Microsoft.ML.OnnxRuntime.DirectML
 ```
 
 **CUDA (NVIDIA):**
+
 ```json
 { "ExecutionProvider": "CUDA", "GpuDeviceId": 0 }
 ```
+
 Дополнительно установите пакет:
+
 ```bash
 dotnet add package Microsoft.ML.OnnxRuntime.Gpu
 ```

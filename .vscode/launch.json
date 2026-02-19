@@ -1,0 +1,97 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // ─── 1. Запуск дообучения (Release) ─────────────────────────────────────
+    {
+      "name": "Run: Fine-tuning (Release)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build: Training (Release)",
+      "program": "${workspaceFolder}/src/MobileNetV3.Training/bin/Release/net8.0/MobileNetV3.Training.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "env": {
+        "DOTNET_ENVIRONMENT": "Production",
+        "ORT_LOGGING_LEVEL": "WARNING"
+      }
+    },
+
+    // ─── 2. Отладка дообучения (Debug) ──────────────────────────────────────
+    {
+      "name": "Debug: Fine-tuning (Debug)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build: Training (Debug)",
+      "program": "${workspaceFolder}/src/MobileNetV3.Training/bin/Debug/net8.0/MobileNetV3.Training.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false,
+      "requireExactSource": false,
+      "env": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "ORT_LOGGING_LEVEL": "VERBOSE"
+      },
+      "symbolOptions": {
+        "searchMicrosoftSymbolServer": true,
+        "searchNuGetOrgSymbolServer": true
+      }
+    },
+
+    // ─── 3. Отладка с остановкой на точке входа ──────────────────────────────
+    {
+      "name": "Debug: Fine-tuning (Stop at Entry)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build: Training (Debug)",
+      "program": "${workspaceFolder}/src/MobileNetV3.Training/bin/Debug/net8.0/MobileNetV3.Training.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": true,
+      "justMyCode": true,
+      "env": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+
+    // ─── 4. Запуск всех тестов ───────────────────────────────────────────────
+    {
+      "name": "Test: Run All Tests",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build: Tests (Debug)",
+      "program": "${workspaceFolder}/src/MobileNetV3.Tests/bin/Debug/net8.0/MobileNetV3.Tests.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/MobileNetV3.Tests",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "env": {
+        "DOTNET_ENVIRONMENT": "Test"
+      }
+    },
+
+    // ─── 5. Attach к уже запущенному процессу ────────────────────────────────
+    {
+      "name": "Debug: Attach to Process",
+      "type": "coreclr",
+      "request": "attach",
+      "processName": "MobileNetV3.Training",
+      "justMyCode": false
+    }
+  ],
+
+  // ─── Составная конфигурация: build + run ────────────────────────────────────
+  "compounds": [
+    {
+      "name": "Compound: Build & Debug Training",
+      "configurations": [
+        "Debug: Fine-tuning (Debug)"
+      ],
+      "stopAll": true
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+root = true
+
+# ─── Все файлы ────────────────────────────────────────────────────────────────
+[*]
+charset                  = utf-8
+end_of_line              = crlf
+indent_style             = space
+indent_size              = 4
+trim_trailing_whitespace = true
+insert_final_newline     = true
+
+# ─── C# ──────────────────────────────────────────────────────────────────────
+[*.cs]
+indent_size = 4
+
+# Стиль именования: поля с underscore-prefix
+dotnet_naming_rule.private_fields_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.private_fields_should_be_camel_case.symbols  = private_fields
+dotnet_naming_rule.private_fields_should_be_camel_case.style    = prefix_underscore
+
+dotnet_naming_symbols.private_fields.applicable_kinds           = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_style.prefix_underscore.capitalization            = camel_case
+dotnet_naming_style.prefix_underscore.required_prefix           = _
+
+# Using-директивы внутри namespace
+csharp_using_directive_placement = outside_namespace:warning
+
+# Предпочитать var при очевидном типе
+csharp_style_var_for_built_in_types         = false:suggestion
+csharp_style_var_when_type_is_apparent      = true:suggestion
+csharp_style_var_elsewhere                  = false:suggestion
+
+# Новая строка перед открывающей скобкой
+csharp_new_line_before_open_brace                         = all
+csharp_new_line_before_else                               = true
+csharp_new_line_before_catch                              = true
+csharp_new_line_before_finally                            = true
+csharp_new_line_before_members_in_object_initializers    = true
+csharp_new_line_before_members_in_anonymous_types        = true
+
+# Пробелы
+csharp_space_after_cast                               = false
+csharp_space_before_colon_in_inheritance_clause       = true
+csharp_space_after_colon_in_inheritance_clause        = true
+csharp_space_around_binary_operators                  = before_and_after
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_call_parameter_list_parentheses        = false
+
+# Expression-body только для простых свойств
+csharp_style_expression_bodied_methods    = false:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_constructors = false:suggestion
+
+# Nullable
+dotnet_diagnostic.CS8600.severity = error
+dotnet_diagnostic.CS8602.severity = error
+dotnet_diagnostic.CS8603.severity = error
+dotnet_diagnostic.CS8604.severity = error
+
+# ─── XML / csproj / slnx ─────────────────────────────────────────────────────
+[*.{xml,csproj,props,targets,slnx}]
+indent_size = 2
+
+# ─── JSON ────────────────────────────────────────────────────────────────────
+[*.json]
+indent_size = 2
+
+# ─── Python ──────────────────────────────────────────────────────────────────
+[*.py]
+indent_size = 4
+
+# ─── Markdown ────────────────────────────────────────────────────────────────
+[*.md]
+trim_trailing_whitespace = false

@@ -51,6 +51,15 @@ dist/
 Thumbs.db
 desktop.ini
 
+# ─── VS Code ────────────────────────────────────────────────────────────────
+.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+# ─── Code coverage ───────────────────────────────────────────────────────────
+.coverage/
+
 # ─── Logs & temp ─────────────────────────────────────────────────────────────
 *.log
 *.tmp

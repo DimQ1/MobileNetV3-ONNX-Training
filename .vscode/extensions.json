@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    // ─── C# / .NET ───────────────────────────────────────────────────────────
+    "ms-dotnettools.csharp",
+    "ms-dotnettools.csdevkit",
+    "ms-dotnettools.vscode-dotnet-runtime",
+
+    // ─── Тесты ───────────────────────────────────────────────────────────────
+    "formulahendry.dotnet-test-explorer",
+
+    // ─── Python ──────────────────────────────────────────────────────────────
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "ms-python.pylint",
+
+    // ─── Git ─────────────────────────────────────────────────────────────────
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+
+    // ─── Удобство ────────────────────────────────────────────────────────────
+    "streetsidesoftware.code-spell-checker",
+    "editorconfig.editorconfig"
+  ]
+}

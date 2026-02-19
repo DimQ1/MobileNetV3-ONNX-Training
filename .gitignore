@@ -23,8 +23,9 @@ artifacts/
 !artifacts/checkpoint/.gitkeep
 !artifacts/.gitkeep
 
-# ─── ONNX model files (large binaries — tracked via Git LFS or excluded) ─────
-models/*.onnx
+# ─── ONNX / PyTorch model files (хранятся через Git LFS) ─────────────────────
+# *.onnx и *.pth трекаются через Git LFS (см. .gitattributes)
+# output/*.onnx — не коммитим: результат обучения, генерируется локально
 output/*.onnx
 
 # Keep placeholder dirs

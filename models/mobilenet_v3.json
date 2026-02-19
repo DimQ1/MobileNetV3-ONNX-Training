@@ -1,0 +1,56 @@
+{
+  "model": "MobileNetV3-Small",
+  "base_weights": "ImageNet (IMAGENET1K_V1)",
+  "num_classes": 3,
+  "class_labels": [
+    "Clean",
+    "DryDirt",
+    "WaterDrop"
+  ],
+  "input_shape": [
+    1,
+    3,
+    224,
+    224
+  ],
+  "input_name": "input",
+  "output_name": "output",
+  "image_size": 224,
+  "norm_mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "norm_std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "opset_version": 17,
+  "torch_version": "2.10.0+cpu",
+  "torchvision_version": "0.25.0+cpu",
+  "onnx_graph": {
+    "num_nodes": 122,
+    "inputs": {
+      "input": [
+        0,
+        3,
+        224,
+        224
+      ]
+    },
+    "outputs": {
+      "output": [
+        0,
+        3
+      ]
+    },
+    "latency_ms": 4.82,
+    "output_shape": [
+      1,
+      3
+    ]
+  },
+  "training_artifacts_generated": false,
+  "exported_at": "2026-02-19T13:29:18"
+}

@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MobileNetV3.Core/MobileNetV3.Core.csproj" />
+    <Project Path="src/MobileNetV3.Tests/MobileNetV3.Tests.csproj" />
+    <Project Path="src/MobileNetV3.Training/MobileNetV3.Training.csproj" />
+  </Folder>
+</Solution>

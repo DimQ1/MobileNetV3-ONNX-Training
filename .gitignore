@@ -1,0 +1,58 @@
+# ─── Build output ────────────────────────────────────────────────────────────
+[Bb]in/
+[Oo]bj/
+out/
+publish/
+
+# ─── Visual Studio / Rider ───────────────────────────────────────────────────
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+.vscode/
+
+# ─── NuGet ───────────────────────────────────────────────────────────────────
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+!artifacts/checkpoint/.gitkeep
+!artifacts/.gitkeep
+
+# ─── ONNX model files (large binaries — tracked via Git LFS or excluded) ─────
+models/*.onnx
+output/*.onnx
+
+# Keep placeholder dirs
+!models/.gitkeep
+!output/.gitkeep
+!dataset/Clean/.gitkeep
+!dataset/DryDirt/.gitkeep
+!dataset/WaterDrop/.gitkeep
+
+# ─── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+.pytest_cache/
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Logs & temp ─────────────────────────────────────────────────────────────
+*.log
+*.tmp
+*.temp
+training_config.json

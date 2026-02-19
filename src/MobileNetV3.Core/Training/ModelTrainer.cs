@@ -1,10 +1,9 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.ML.OnnxRuntime;
-using Microsoft.ML.OnnxRuntime.Training;
 using MobileNetV3.Core.Abstractions;
 using MobileNetV3.Core.Configuration;
 using MobileNetV3.Core.Models;
-using System.Diagnostics;
 
 namespace MobileNetV3.Core.Training;
 
@@ -28,6 +27,7 @@ public sealed class ModelTrainer : IModelTrainer
     private readonly ILogger<ModelTrainer> _logger;
 
     private TrainingSession? _session;
+    private CheckpointState? _checkpointState;
     private bool _disposed;
 
     public ModelTrainer(
@@ -38,12 +38,12 @@ public sealed class ModelTrainer : IModelTrainer
         LearningRateScheduler lrScheduler,
         ILogger<ModelTrainer> logger)
     {
-        _config       = config;
+        _config = config;
         _datasetLoader = datasetLoader;
         _trainMetrics = trainMetrics;
-        _valMetrics   = valMetrics;
-        _lrScheduler  = lrScheduler;
-        _logger       = logger;
+        _valMetrics = valMetrics;
+        _lrScheduler = lrScheduler;
+        _logger = logger;
     }
 
     /// <inheritdoc/>
@@ -62,8 +62,8 @@ public sealed class ModelTrainer : IModelTrainer
         _session = CreateTrainingSession();
 
         var epochHistory = new List<EpochResult>();
-        float bestValAcc  = 0f;
-        int   bestEpoch   = 0;
+        float bestValAcc = 0f;
+        int bestEpoch = 0;
 
         var totalStopwatch = Stopwatch.StartNew();
         _lrScheduler.Reset();
@@ -94,13 +94,13 @@ public sealed class ModelTrainer : IModelTrainer
             // ── Фиксируем результаты ────────────────────────────────────────
             var result = new EpochResult
             {
-                Epoch               = epoch,
-                TrainLoss           = trainLoss,
-                TrainAccuracy       = _trainMetrics.Accuracy,
-                ValidationLoss      = valLoss,
-                ValidationAccuracy  = valAcc,
-                Duration            = epochStopwatch.Elapsed,
-                LearningRate        = _lrScheduler.CurrentLearningRate
+                Epoch = epoch,
+                TrainLoss = trainLoss,
+                TrainAccuracy = _trainMetrics.Accuracy,
+                ValidationLoss = valLoss,
+                ValidationAccuracy = valAcc,
+                Duration = epochStopwatch.Elapsed,
+                LearningRate = _lrScheduler.CurrentLearningRate
             };
 
             epochHistory.Add(result);
@@ -112,7 +112,7 @@ public sealed class ModelTrainer : IModelTrainer
             if (valAcc > bestValAcc)
             {
                 bestValAcc = valAcc;
-                bestEpoch  = epoch;
+                bestEpoch = epoch;
                 SaveCheckpoint("best");
                 _logger.LogInformation(
                     "Новый лучший результат: Val Acc={Acc:P2} (epoch {E})", valAcc, epoch);
@@ -133,12 +133,12 @@ public sealed class ModelTrainer : IModelTrainer
 
         var report = new TrainingReport
         {
-            ModelOutputPath      = _config.OutputModelPath,
-            EpochHistory         = epochHistory,
+            ModelOutputPath = _config.OutputModelPath,
+            EpochHistory = epochHistory,
             BestValidationAccuracy = bestValAcc,
-            BestEpoch            = bestEpoch,
-            TotalDuration        = totalStopwatch.Elapsed,
-            PerClassAccuracy     = perClassAccuracy
+            BestEpoch = bestEpoch,
+            TotalDuration = totalStopwatch.Elapsed,
+            PerClassAccuracy = perClassAccuracy
         };
 
         LogFinalReport(report);
@@ -223,7 +223,7 @@ public sealed class ModelTrainer : IModelTrainer
     /// </summary>
     private float ExecuteTrainStep(TrainingBatch batch)
     {
-        var inputShape  = new long[] { batch.BatchSize, 3, _config.ImageSize, _config.ImageSize };
+        var inputShape = new long[] { batch.BatchSize, 3, _config.ImageSize, _config.ImageSize };
         var labelsShape = new long[] { batch.BatchSize };
 
         using var imageTensor = OrtValue.CreateTensorValueFromMemory(
@@ -235,7 +235,8 @@ public sealed class ModelTrainer : IModelTrainer
         // Порядок входов: [images, labels] — должен совпадать с training_model.onnx
         var inputs = new List<OrtValue> { imageTensor, labelTensor };
 
-        var outputs = _session!.TrainStep(inputs);
+        // TrainStep(inputs) → IDisposableReadOnlyCollection<OrtValue>
+        using var outputs = _session!.TrainStep(inputs);
 
         // Первый выход training_model — значение loss
         float loss = outputs[0].GetTensorDataAsSpan<float>()[0];
@@ -254,7 +255,7 @@ public sealed class ModelTrainer : IModelTrainer
     /// </summary>
     private float ExecuteEvalStep(TrainingBatch batch)
     {
-        var inputShape  = new long[] { batch.BatchSize, 3, _config.ImageSize, _config.ImageSize };
+        var inputShape = new long[] { batch.BatchSize, 3, _config.ImageSize, _config.ImageSize };
         var labelsShape = new long[] { batch.BatchSize };
 
         using var imageTensor = OrtValue.CreateTensorValueFromMemory(
@@ -264,7 +265,7 @@ public sealed class ModelTrainer : IModelTrainer
             batch.Labels, labelsShape);
 
         var inputs = new List<OrtValue> { imageTensor, labelTensor };
-        var outputs = _session!.EvalStep(inputs);
+        using var outputs = _session!.EvalStep(inputs);
 
         return outputs[0].GetTensorDataAsSpan<float>()[0];
     }
@@ -273,20 +274,21 @@ public sealed class ModelTrainer : IModelTrainer
 
     private TrainingSession CreateTrainingSession()
     {
-        var checkpointState = CheckpointState.LoadCheckpoint(_config.CheckpointDir);
+        _checkpointState = CheckpointState.LoadCheckpoint(_config.CheckpointDir);
 
-        var trainingSessionOptions = new TrainingSessionOptions();
-        ApplyExecutionProvider(trainingSessionOptions);
+        // TrainingSession принимает SessionOptions (не TrainingSessionOptions)
+        var sessionOptions = new SessionOptions();
+        ApplyExecutionProvider(sessionOptions);
 
         return new TrainingSession(
-            trainingSessionOptions,
-            checkpointState,
+            sessionOptions,
+            _checkpointState,
             _config.TrainingModelPath,
             _config.EvalModelPath,
             _config.OptimizerModelPath);
     }
 
-    private void ApplyExecutionProvider(TrainingSessionOptions options)
+    private void ApplyExecutionProvider(SessionOptions options)
     {
         switch (_config.ExecutionProvider)
         {
@@ -311,10 +313,16 @@ public sealed class ModelTrainer : IModelTrainer
 
     private void SaveCheckpoint(string tag)
     {
-        string path = Path.Combine(_config.CheckpointDir, tag);
-        Directory.CreateDirectory(path);
-        CheckpointState.SaveCheckpoint(_session!.GetCheckpointState(), path);
-        _logger.LogDebug("Checkpoint сохранён: {Path}", path);
+        if (_checkpointState is null) return;
+
+        // SaveCheckpoint(state, directory, includeOptimizerState)
+        // ORT перезапишет файлы в указанной директории
+        CheckpointState.SaveCheckpoint(
+            _checkpointState,
+            _config.CheckpointDir,
+            includeOptimizerState: true);
+
+        _logger.LogDebug("Checkpoint сохранён: {Path} (tag={Tag})", _config.CheckpointDir, tag);
     }
 
     private void UpdateSessionLearningRate(float newLr)
@@ -390,7 +398,7 @@ public sealed class ModelTrainer : IModelTrainer
     private Dictionary<string, float> ComputePerClassAccuracy(IReadOnlyList<ImageSample> valSamples)
     {
         var correct = new Dictionary<long, int>();
-        var total   = new Dictionary<long, int>();
+        var total = new Dictionary<long, int>();
 
         foreach (var sample in valSamples)
         {
@@ -406,7 +414,7 @@ public sealed class ModelTrainer : IModelTrainer
                 sample.Tensor, inputShape);
 
             var inputs = new Dictionary<string, OrtValue>
-                { [_config.InputNodeName] = tensor };
+            { [_config.InputNodeName] = tensor };
 
             using var results = inferSession.Run(
                 new RunOptions(), inputs, inferSession.OutputNames);
@@ -443,6 +451,7 @@ public sealed class ModelTrainer : IModelTrainer
     {
         if (_disposed) return;
         _session?.Dispose();
+        _checkpointState?.Dispose();
         _disposed = true;
     }
 }

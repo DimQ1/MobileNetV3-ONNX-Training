@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MobileNetV3.Core.Abstractions;
@@ -8,7 +9,6 @@ using MobileNetV3.Core.Metrics;
 using MobileNetV3.Core.Models;
 using MobileNetV3.Core.Preprocessing;
 using MobileNetV3.Core.Training;
-using System.Text.Json;
 
 // ─── Загрузка конфигурации ────────────────────────────────────────────────────
 
@@ -39,9 +39,11 @@ var services = new ServiceCollection();
 
 services.AddLogging(builder =>
 {
-    builder.AddConsole(opt =>
+    builder.AddSimpleConsole(opt =>
     {
         opt.TimestampFormat = "[HH:mm:ss] ";
+        opt.SingleLine = false;
+        opt.IncludeScopes = false;
     });
     builder.SetMinimumLevel(LogLevel.Information);
 });

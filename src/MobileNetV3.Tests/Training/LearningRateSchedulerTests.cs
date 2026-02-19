@@ -7,15 +7,15 @@ namespace MobileNetV3.Tests.Training;
 public sealed class LearningRateSchedulerTests
 {
     private static LearningRateScheduler CreateScheduler(
-        float lr        = 1e-3f,
-        float decay     = 0.5f,
-        int   patience  = 3)
+        float lr = 1e-3f,
+        float decay = 0.5f,
+        int patience = 3)
     {
         var config = new TrainingConfig
         {
-            LearningRate          = lr,
-            LrDecayFactor         = decay,
-            LrSchedulerPatience   = patience
+            LearningRate = lr,
+            LrDecayFactor = decay,
+            LrSchedulerPatience = patience
         };
         return new LearningRateScheduler(config, NullLogger<LearningRateScheduler>.Instance);
     }
@@ -72,12 +72,19 @@ public sealed class LearningRateSchedulerTests
     [Fact]
     public void Step_ConsecutiveReductions_MultipliesDecay()
     {
-        var scheduler = CreateScheduler(lr: 1e-2f, decay: 0.5f, patience: 1);
+        // patience=2: для reduce нужно 2 эпохи без улучшения
+        // Шаг 1: best=1.0
+        // Шаг 2: counter=1
+        // Шаг 3: counter=2 → reduce → lr=5e-3, counter=0
+        // Шаг 4: counter=1
+        // Шаг 5: counter=2 → reduce → lr=2.5e-3, counter=0
+        var scheduler = CreateScheduler(lr: 1e-2f, decay: 0.5f, patience: 2);
 
         scheduler.Step(1.0f); // best = 1.0
-        scheduler.Step(1.0f); // 1 без улучшения → reduce → lr = 5e-3
-        scheduler.Step(1.0f); // снова best обновился при reduce, снова 1 без улучшения
-        scheduler.Step(1.0f); // → reduce → lr = 2.5e-3
+        scheduler.Step(1.0f); // counter = 1
+        scheduler.Step(1.0f); // counter = 2 → 1й reduce → lr = 5e-3
+        scheduler.Step(1.0f); // counter = 1
+        scheduler.Step(1.0f); // counter = 2 → 2й reduce → lr = 2.5e-3
 
         Assert.Equal(2.5e-3f, scheduler.CurrentLearningRate, precision: 5);
     }

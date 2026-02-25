@@ -16,14 +16,26 @@ public partial class MainForm
         var split = new SplitContainer
         {
             Dock = DockStyle.Fill,
-            Orientation = Orientation.Vertical,
-            SplitterDistance = 680,
-            Panel1MinSize = 400,
-            Panel2MinSize = 280
+            Orientation = Orientation.Vertical
         };
         split.Panel1.Controls.Add(BuildImagePreviewPanel());
         split.Panel2.Controls.Add(BuildImageResultsPanel());
         _imageTestTab.Controls.Add(split);
+
+        // Set splitter properties when form is shown
+        this.Shown += (s, e) =>
+        {
+            try
+            {
+                split.Panel1MinSize = 400;
+                split.Panel2MinSize = 280;
+                
+                int availableWidth = split.Width - split.Panel2MinSize;
+                int desiredDistance = Math.Min(680, Math.Max(400, availableWidth));
+                split.SplitterDistance = desiredDistance;
+            }
+            catch { /* Ignore if splitter configuration fails */ }
+        };
     }
 
     private Panel BuildImagePreviewPanel()

@@ -1,7 +1,51 @@
 {
   "version": "0.2.0",
   "configurations": [
-    // ─── 1. Запуск дообучения (Release) ─────────────────────────────────────
+    // ─── 1. Debug: Core Tests (Debug) ──────────────────────────────────────
+    {
+      "name": "Debug: Core Tests (Debug)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build: Tests (Debug)",
+      "program": "${workspaceFolder}/src/MobileNetV3.Tests/bin/Debug/net8.0/MobileNetV3.Tests.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/MobileNetV3.Tests",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false,
+      "requireExactSource": false,
+      "env": {
+        "DOTNET_ENVIRONMENT": "Test",
+        "ORT_LOGGING_LEVEL": "VERBOSE"
+      },
+      "symbolOptions": {
+        "searchMicrosoftSymbolServer": true,
+        "searchNuGetOrgSymbolServer": true
+      }
+    },
+    // ─── 2. Debug: UI (Debug) ────────────────────────────────────────────────
+    {
+      "name": "Debug: UI (Debug)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build: UI (Debug)",
+      "program": "${workspaceFolder}/src/MobileNetV3.UI/bin/Debug/net8.0-windows/MobileNetV3.UI.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false,
+      "requireExactSource": false,
+      "env": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "ORT_LOGGING_LEVEL": "WARNING"
+      },
+      "symbolOptions": {
+        "searchMicrosoftSymbolServer": true,
+        "searchNuGetOrgSymbolServer": true
+      }
+    },
+    // ─── 3. Запуск дообучения (Release) ─────────────────────────────────────
     {
       "name": "Run: Fine-tuning (Release)",
       "type": "coreclr",
@@ -17,8 +61,7 @@
         "ORT_LOGGING_LEVEL": "WARNING"
       }
     },
-
-    // ─── 2. Отладка дообучения (Debug) ──────────────────────────────────────
+    // ─── 3. Отладка дообучения (Debug) ──────────────────────────────────────
     {
       "name": "Debug: Fine-tuning (Debug)",
       "type": "coreclr",
@@ -40,8 +83,7 @@
         "searchNuGetOrgSymbolServer": true
       }
     },
-
-    // ─── 3. Отладка с остановкой на точке входа ──────────────────────────────
+    // ─── 4. Отладка с остановкой на точке входа ──────────────────────────────
     {
       "name": "Debug: Fine-tuning (Stop at Entry)",
       "type": "coreclr",
@@ -57,8 +99,7 @@
         "DOTNET_ENVIRONMENT": "Development"
       }
     },
-
-    // ─── 4. Запуск всех тестов ───────────────────────────────────────────────
+    // ─── 5. Запуск всех тестов ───────────────────────────────────────────────
     {
       "name": "Test: Run All Tests",
       "type": "coreclr",
@@ -73,8 +114,7 @@
         "DOTNET_ENVIRONMENT": "Test"
       }
     },
-
-    // ─── 5. Attach к уже запущенному процессу ────────────────────────────────
+    // ─── 6. Attach к уже запущенному процессу ────────────────────────────────
     {
       "name": "Debug: Attach to Process",
       "type": "coreclr",
@@ -83,7 +123,6 @@
       "justMyCode": false
     }
   ],
-
   // ─── Составная конфигурация: build + run ────────────────────────────────────
   "compounds": [
     {

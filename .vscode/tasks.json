@@ -4,7 +4,6 @@
     // ══════════════════════════════════════════════════════════════════════════
     // BUILD TASKS
     // ══════════════════════════════════════════════════════════════════════════
-
     // ─── Сборка всего решения (Debug) ────────────────────────────────────────
     {
       "label": "build: Solution (Debug)",
@@ -13,8 +12,10 @@
       "args": [
         "build",
         "${workspaceFolder}/MobileNetV3Training.slnx",
-        "--configuration", "Debug",
-        "--verbosity", "minimal"
+        "--configuration",
+        "Debug",
+        "--verbosity",
+        "minimal"
       ],
       "group": "build",
       "presentation": {
@@ -25,7 +26,6 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     // ─── Сборка всего решения (Release) ──────────────────────────────────────
     {
       "label": "build: Solution (Release)",
@@ -34,8 +34,10 @@
       "args": [
         "build",
         "${workspaceFolder}/MobileNetV3Training.slnx",
-        "--configuration", "Release",
-        "--verbosity", "minimal"
+        "--configuration",
+        "Release",
+        "--verbosity",
+        "minimal"
       ],
       "group": "build",
       "presentation": {
@@ -46,7 +48,6 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     // ─── Сборка только Training-проекта (Debug) ──────────────────────────────
     {
       "label": "build: Training (Debug)",
@@ -55,8 +56,10 @@
       "args": [
         "build",
         "${workspaceFolder}/src/MobileNetV3.Training/MobileNetV3.Training.csproj",
-        "--configuration", "Debug",
-        "--verbosity", "minimal"
+        "--configuration",
+        "Debug",
+        "--verbosity",
+        "minimal"
       ],
       "group": "build",
       "presentation": {
@@ -67,7 +70,6 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     // ─── Сборка только Training-проекта (Release) ────────────────────────────
     {
       "label": "build: Training (Release)",
@@ -76,8 +78,10 @@
       "args": [
         "build",
         "${workspaceFolder}/src/MobileNetV3.Training/MobileNetV3.Training.csproj",
-        "--configuration", "Release",
-        "--verbosity", "minimal"
+        "--configuration",
+        "Release",
+        "--verbosity",
+        "minimal"
       ],
       "group": "build",
       "presentation": {
@@ -88,7 +92,72 @@
       },
       "problemMatcher": "$msCompile"
     },
-
+    // ─── Сборка Core-проекта (Debug) ──────────────────────────────────────────
+    {
+      "label": "build: Core (Debug)",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/MobileNetV3.Core/MobileNetV3.Core.csproj",
+        "--configuration",
+        "Debug",
+        "--verbosity",
+        "minimal"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": "$msCompile"
+    },
+    // ─── Сборка Core-проекта (Release) ────────────────────────────────────────
+    {
+      "label": "build: Core (Release)",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/MobileNetV3.Core/MobileNetV3.Core.csproj",
+        "--configuration",
+        "Release",
+        "--verbosity",
+        "minimal"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": "$msCompile"
+    },
+    // ─── Сборка UI-проекта (Debug) ────────────────────────────────────────────
+    {
+      "label": "build: UI (Debug)",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/MobileNetV3.UI/MobileNetV3.UI.csproj",
+        "--configuration",
+        "Debug",
+        "--verbosity",
+        "minimal"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": "$msCompile"
+    },
     // ─── Сборка тестового проекта ─────────────────────────────────────────────
     {
       "label": "build: Tests (Debug)",
@@ -97,8 +166,10 @@
       "args": [
         "build",
         "${workspaceFolder}/src/MobileNetV3.Tests/MobileNetV3.Tests.csproj",
-        "--configuration", "Debug",
-        "--verbosity", "minimal"
+        "--configuration",
+        "Debug",
+        "--verbosity",
+        "minimal"
       ],
       "group": "build",
       "presentation": {
@@ -109,7 +180,6 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     // ─── Clean решения ────────────────────────────────────────────────────────
     {
       "label": "build: Clean Solution",
@@ -118,7 +188,8 @@
       "args": [
         "clean",
         "${workspaceFolder}/MobileNetV3Training.slnx",
-        "--verbosity", "minimal"
+        "--verbosity",
+        "minimal"
       ],
       "group": "build",
       "presentation": {
@@ -128,11 +199,9 @@
       },
       "problemMatcher": []
     },
-
     // ══════════════════════════════════════════════════════════════════════════
     // TEST TASKS
     // ══════════════════════════════════════════════════════════════════════════
-
     // ─── Запуск всех тестов ───────────────────────────────────────────────────
     {
       "label": "test: Run All",
@@ -141,8 +210,10 @@
       "args": [
         "test",
         "${workspaceFolder}/src/MobileNetV3.Tests/MobileNetV3.Tests.csproj",
-        "--configuration", "Debug",
-        "--logger", "console;verbosity=normal",
+        "--configuration",
+        "Debug",
+        "--logger",
+        "console;verbosity=normal",
         "--no-build"
       ],
       "dependsOn": "build: Tests (Debug)",
@@ -158,7 +229,6 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     // ─── Тесты с покрытием кода ───────────────────────────────────────────────
     {
       "label": "test: Run with Coverage",
@@ -167,10 +237,14 @@
       "args": [
         "test",
         "${workspaceFolder}/src/MobileNetV3.Tests/MobileNetV3.Tests.csproj",
-        "--configuration", "Debug",
-        "--collect", "XPlat Code Coverage",
-        "--results-directory", "${workspaceFolder}/.coverage",
-        "--logger", "console;verbosity=normal"
+        "--configuration",
+        "Debug",
+        "--collect",
+        "XPlat Code Coverage",
+        "--results-directory",
+        "${workspaceFolder}/.coverage",
+        "--logger",
+        "console;verbosity=normal"
       ],
       "group": "test",
       "presentation": {
@@ -180,7 +254,6 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     // ─── Запуск тестов по фильтру ─────────────────────────────────────────────
     {
       "label": "test: Run Filter (Preprocessor)",
@@ -189,8 +262,10 @@
       "args": [
         "test",
         "${workspaceFolder}/src/MobileNetV3.Tests/MobileNetV3.Tests.csproj",
-        "--filter", "FullyQualifiedName~Preprocessing",
-        "--logger", "console;verbosity=normal"
+        "--filter",
+        "FullyQualifiedName~Preprocessing",
+        "--logger",
+        "console;verbosity=normal"
       ],
       "group": "test",
       "presentation": {
@@ -200,7 +275,6 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     {
       "label": "test: Run Filter (DatasetLoader)",
       "command": "dotnet",
@@ -208,8 +282,10 @@
       "args": [
         "test",
         "${workspaceFolder}/src/MobileNetV3.Tests/MobileNetV3.Tests.csproj",
-        "--filter", "FullyQualifiedName~Data",
-        "--logger", "console;verbosity=normal"
+        "--filter",
+        "FullyQualifiedName~Data",
+        "--logger",
+        "console;verbosity=normal"
       ],
       "group": "test",
       "presentation": {
@@ -219,7 +295,6 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     {
       "label": "test: Run Filter (LRScheduler)",
       "command": "dotnet",
@@ -227,8 +302,10 @@
       "args": [
         "test",
         "${workspaceFolder}/src/MobileNetV3.Tests/MobileNetV3.Tests.csproj",
-        "--filter", "FullyQualifiedName~Training",
-        "--logger", "console;verbosity=normal"
+        "--filter",
+        "FullyQualifiedName~Training",
+        "--logger",
+        "console;verbosity=normal"
       ],
       "group": "test",
       "presentation": {
@@ -238,11 +315,9 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     // ══════════════════════════════════════════════════════════════════════════
     // RUN TASKS
     // ══════════════════════════════════════════════════════════════════════════
-
     // ─── Запуск дообучения ────────────────────────────────────────────────────
     {
       "label": "run: Fine-tuning",
@@ -250,8 +325,10 @@
       "type": "process",
       "args": [
         "run",
-        "--project", "${workspaceFolder}/src/MobileNetV3.Training/MobileNetV3.Training.csproj",
-        "--configuration", "Release"
+        "--project",
+        "${workspaceFolder}/src/MobileNetV3.Training/MobileNetV3.Training.csproj",
+        "--configuration",
+        "Release"
       ],
       "dependsOn": "build: Training (Release)",
       "group": "none",
@@ -263,7 +340,6 @@
       },
       "problemMatcher": "$msCompile"
     },
-
     // ─── Генерация ONNX-артефактов (Python) ──────────────────────────────────
     {
       "label": "run: Generate ONNX Artifacts (Python)",
@@ -283,7 +359,6 @@
       },
       "problemMatcher": []
     },
-
     // ─── Restore NuGet-пакетов ────────────────────────────────────────────────
     {
       "label": "nuget: Restore",

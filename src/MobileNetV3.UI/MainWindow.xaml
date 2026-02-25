@@ -1,0 +1,222 @@
+<Window x:Class="MobileNetV3.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MobileNetV3 - Training &amp; Testing"
+        Height="800"
+        Width="1200"
+        MinHeight="700"
+        MinWidth="1000"
+        WindowStartupLocation="CenterScreen">
+  <Window.Resources>
+    <Style x:Key="GroupBoxStyle"
+           TargetType="Border">
+      <Setter Property="BorderBrush"
+              Value="Gray"/>
+      <Setter Property="BorderThickness"
+              Value="1"/>
+      <Setter Property="Padding"
+              Value="12"/>
+      <Setter Property="Background"
+              Value="#F0F0F0"/>
+    </Style>
+    <Style x:Key="GroupHeader"
+           TargetType="Label">
+      <Setter Property="FontWeight"
+              Value="SemiBold"/>
+      <Setter Property="FontSize"
+              Value="11"/>
+      <Setter Property="Margin"
+              Value="0,0,0,8"/>
+    </Style>
+    <Style TargetType="Button">
+      <Setter Property="MinHeight"
+              Value="34"/>
+      <Setter Property="Padding"
+              Value="12,0"/>
+      <Setter Property="Margin"
+              Value="4,2"/>
+      <Setter Property="FontSize"
+              Value="10"/>
+    </Style>
+  </Window.Resources>
+  <TabControl Name="MainTabControl">
+    <TabItem Header="⚙  Training">
+      <Grid Margin="12">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0"
+                Style="{StaticResource GroupBoxStyle}">
+          <StackPanel>
+            <Label Content="Dataset"
+                   Style="{StaticResource GroupHeader}"/>
+            <Grid>
+              <TextBox Name="TxtDatasetPath"
+                       IsReadOnly="True"/>
+              <Button Name="BtnSelectDataset"
+                      Content="Browse…"
+                      HorizontalAlignment="Right"
+                      Width="100"
+                      Background="#0078D7"
+                      Foreground="White"/>
+            </Grid>
+            <Label Name="LblDatasetInfo"
+                   Content="No dataset selected"
+                   Foreground="Gray"/>
+          </StackPanel>
+        </Border>
+        <Border Grid.Row="1"
+                Style="{StaticResource GroupBoxStyle}">
+          <StackPanel Margin="10">
+            <Label Content="Training"
+                   Style="{StaticResource GroupHeader}"/>
+            <StackPanel Orientation="Horizontal">
+              <Button Name="BtnStartTraining"
+                      Content="▶ Start Training"
+                      Background="#009600"
+                      Foreground="White"
+                      Width="170"/>
+              <ProgressBar Name="TrainingProgress"
+                           Height="25"
+                           Margin="20,0"
+                           Minimum="0"
+                           Maximum="100"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        <Border Grid.Row="2"
+                Style="{StaticResource GroupBoxStyle}">
+          <StackPanel Margin="10">
+            <Label Content="Training Log"
+                   Style="{StaticResource GroupHeader}"/>
+            <TextBox Name="TxtTrainingLog"
+                     AcceptsReturn="True"
+                     IsReadOnly="True"
+                     VerticalScrollBarVisibility="Auto"
+                     Background="#1E1E1E"
+                     Foreground="LimeGreen"
+                     FontFamily="Consolas"
+                     FontSize="9"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </TabItem>
+    <TabItem Header="🖼 Image Testing">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="0"
+                Style="{StaticResource GroupBoxStyle}">
+          <StackPanel>
+            <Label Content="Image Preview"
+                   Style="{StaticResource GroupHeader}"/>
+            <Image Name="ImagePreview"
+                   Stretch="Uniform"/>
+            <StackPanel Orientation="Horizontal"
+                        Margin="10">
+              <Button Name="BtnSelectImage"
+                      Content="Open Image"
+                      Background="#0078D7"
+                      Foreground="White"/>
+              <Button Name="BtnPredictImage"
+                      Content="Predict"
+                      Background="#009600"
+                      Foreground="White"
+                      Margin="8,0,0,0"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        <GridSplitter Grid.Column="1"
+                      Width="5"
+                      Background="Gray"/>
+        <Border Grid.Column="2"
+                Style="{StaticResource GroupBoxStyle}">
+          <StackPanel Margin="10">
+            <Label Content="Prediction Results"
+                   Style="{StaticResource GroupHeader}"/>
+            <Label Name="LblImagePrediction"
+                   Content="No prediction yet"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"/>
+            <ListBox Name="LstImageResults"
+                     Background="#1E1E1E"
+                     Foreground="LimeGreen"
+                     FontFamily="Consolas"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </TabItem>
+    <TabItem Header="🎬 Video Testing">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="280"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="0"
+                Style="{StaticResource GroupBoxStyle}">
+          <StackPanel>
+            <Label Content="Video / Webcam Preview"
+                   Style="{StaticResource GroupHeader}"/>
+            <Image Name="VideoPreview"
+                   Stretch="Uniform"/>
+            <StackPanel Orientation="Horizontal"
+                        Margin="10">
+              <ComboBox Name="CmbVideoSource"
+                        Width="160">
+                <ComboBoxItem>Camera 0</ComboBoxItem>
+                <ComboBoxItem>Camera 1</ComboBoxItem>
+                <ComboBoxItem>Camera 2</ComboBoxItem>
+              </ComboBox>
+              <Button Name="BtnSelectVideo"
+                      Content="Open Video"
+                      Background="#0078D7"
+                      Foreground="White"/>
+              <Button Name="BtnStartWebcam"
+                      Content="Start Webcam"
+                      Background="#008C00"
+                      Foreground="White"/>
+              <Button Name="BtnStartVideo"
+                      Content="Start Video"
+                      Background="#008C00"
+                      Foreground="White"/>
+              <Button Name="BtnStopVideo"
+                      Content="Stop"
+                      Background="#C80000"
+                      Foreground="White"
+                      IsEnabled="False"/>
+            </StackPanel>
+            <Label Name="LblVideoStatus"
+                   Content="Status: Idle"
+                   Height="24"
+                   VerticalAlignment="Bottom"
+                   Foreground="Gray"
+                   FontSize="9"/>
+          </StackPanel>
+        </Border>
+        <GridSplitter Grid.Column="1"
+                      Width="5"/>
+        <Border Grid.Column="2"
+                Style="{StaticResource GroupBoxStyle}">
+          <StackPanel Margin="10">
+            <Label Content="Live Predictions"
+                   Style="{StaticResource GroupHeader}"/>
+            <ListBox Name="LstVideoResults"
+                     Background="#1E1E1E"
+                     Foreground="LimeGreen"
+                     FontFamily="Consolas"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </TabItem>
+  </TabControl>
+</Window>

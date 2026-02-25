@@ -1,3 +1,4 @@
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MobileNetV3.Core.Abstractions;
@@ -7,10 +8,11 @@ using MobileNetV3.Core.Preprocessing;
 
 namespace MobileNetV3.UI;
 
-internal static class Program
+public partial class App : Application
 {
-    [STAThread]
-    static void Main()
+    public IServiceProvider ServiceProvider { get; private set; } = null!;
+
+    protected override void OnStartup(StartupEventArgs e)
     {
         var services = new ServiceCollection();
 
@@ -22,9 +24,8 @@ internal static class Program
         services.AddSingleton<IImagePreprocessor, ImagePreprocessor>();
         services.AddSingleton<IDatasetLoader, DatasetLoader>();
 
-        using var serviceProvider = services.BuildServiceProvider();
+        ServiceProvider = services.BuildServiceProvider();
 
-        ApplicationConfiguration.Initialize();
-        Application.Run(new MainForm(serviceProvider));
+        base.OnStartup(e);
     }
 }
